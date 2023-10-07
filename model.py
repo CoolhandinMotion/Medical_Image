@@ -8,6 +8,31 @@ GRAVITY_ONE_DIMENSIONAL = 2.5066282746310002
 GRAVITY_THREE_DIMENSIONAL = 7.8748049728612095
 
 
+class Model:
+    @staticmethod
+    def construct_stacked_1d_data_array(image_1d_array, number_of_remaining_clusters):
+        array = np.asarray([image_1d_array for i in range(number_of_remaining_clusters)])
+        return np.transpose(array)
+
+    @staticmethod
+    def construct_stacked_1d_cluster_mean_array(cluster_reference_dict, number_of_pixels):
+        mean_array = np.asarray([cluster_reference_dict[cluster][0] for cluster in cluster_reference_dict])
+        stacked_mean_array = np.asarray([mean_array for i in range(number_of_pixels)])
+        return stacked_mean_array
+    @staticmethod
+    def construct_1d_data_vs_cluster_force(image_1d_array,cluster_reference_dict):
+        number_of_pixels = len(image_1d_array)
+        number_of_remaining_clusters = len(cluster_reference_dict.keys())
+        stacked_1d_data_array = Model.construct_stacked_1d_data_array(image_1d_array,number_of_remaining_clusters)
+        stacked_1d_cluster_mean_array = Model.construct_stacked_1d_cluster_mean_array(
+            cluster_reference_dict,number_of_pixels)
+        return np.absolute(stacked_1d_data_array - stacked_1d_cluster_mean_array)**3
+    @staticmethod
+    def construct_stacked_1d_gravity_force(cluster_reference_dict, control_value, number_of_pixels):
+        cluster_gravity_array = [cluster_reference_dict[cluster][2] for cluster in cluster_reference_dict]
+        stacked_gravity_array = np.asarray([cluster_gravity_array for i in range(number_of_pixels)])
+        return stacked_gravity_array
+
 class Initiate:
     @staticmethod
     def build_image_2_array_dict(img):
@@ -20,7 +45,12 @@ class Initiate:
         return image_data_2_array_dict
 
     @staticmethod
-    def build_image_array(img):
+    def build_image_as_1d_array(img):
+        image_array = [img[t][k] for t in range(img.shape[0]) for k in range(img.shape[1])]
+        return np.asarray(image_array)
+
+    @staticmethod
+    def build_image_as_3d_array(img):
         image_array = [[t, k, img[t][k]] for t in range(img.shape[0]) for k in range(img.shape[1])]
         return np.asarray(image_array)
 
