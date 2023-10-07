@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-from model import Model
+
 import json
 import numpy.typing as npt
 
@@ -9,8 +9,6 @@ GRAVITY_THREE_DIMENSIONAL = 7.8748049728612095
 
 
 
-class Gravity:
-    ...
 
 
 def calculate_1d_gravity(data_list: list[npt.NDArray], control_value: float):
